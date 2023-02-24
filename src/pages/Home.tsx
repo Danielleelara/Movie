@@ -12,10 +12,10 @@ interface MovieProps {
 
 const Home = () => {
   const [moviesPopulars, setMoviesPopulars] = useState([]);
-
   const navigate = useNavigate();
+  const url = import.meta.env.VITE_IMAGE;
+  const key = import.meta.env.VITE_KEY;
 
-  const key = "7cbb88dd714f84168b91799865f574d3";
   const getMovies = async () => {
     try {
       const res = await fetch(`/api/movie/popular?api_key=${key}`, {
@@ -55,7 +55,7 @@ const Home = () => {
               <p style={{ color: "green" }}>Overview: {movie?.overview}</p>
               <p>Popularidade: {movie?.popularity}</p>
               <img
-                src={`https://image.tmdb.org/t/p/w500/${movie?.poster_path}`}
+                src={`${url}${movie?.poster_path}`}
                 alt="banner"
                 width={400}
                 height={600}

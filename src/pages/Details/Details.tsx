@@ -13,9 +13,9 @@ interface MovieProps {
 const Details = () => {
   const [details, setDetails] = useState({} as MovieProps);
   const params = useParams();
-  console.log("recebido", params);
+  const url = import.meta.env.VITE_IMAGE;
+  const key = import.meta.env.VITE_KEY;
 
-  const key = "7cbb88dd714f84168b91799865f574d3";
   const getDetails = async () => {
     try {
       const res = await fetch(`/api/movie/${params.id}?api_key=${key}`, {
@@ -41,7 +41,7 @@ const Details = () => {
     <>
       <div>{details.title}</div>
       <img
-        src={`https://image.tmdb.org/t/p/w500/${details.poster_path}`}
+        src={`${url}${details.poster_path}`}
         alt="banner"
         width={400}
         height={600}
