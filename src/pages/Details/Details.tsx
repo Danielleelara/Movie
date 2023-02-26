@@ -1,45 +1,18 @@
-import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useGetDetails } from "../../hooks/useGetDetails";
 
-interface MovieProps {
-  title?: string;
-  id?: string;
-  overview?: string;
-  popularity?: string;
-  poster_path?: string;
-  backdrop_path?: string;
-}
+const url = import.meta.env.VITE_IMAGE;
 
 const Details = () => {
-  const [details, setDetails] = useState({} as MovieProps);
   const params = useParams();
-  const url = import.meta.env.VITE_IMAGE;
-  const key = import.meta.env.VITE_KEY;
+  const { details, loading } = useGetDetails(params.id);
 
-  const getDetails = async () => {
-    try {
-      const res = await fetch(`/api/movie/${params.id}?api_key=${key}`, {
-        method: "GET",
-      });
-      const response = await res.json();
-      setDetails(response);
-      console.log("resposta", details);
-      return response;
-    } catch (error) {
-      alert("Nenhum filme encontrado!");
-    }
-  };
-
-  useEffect(() => {
-    async function getRequest() {
-      await getDetails();
-    }
-    getRequest();
-  }, [params.id]);
+  if (loading) return <p>Loading...</p>;
 
   return (
     <>
-      <div>{details.title}</div>
+      <h1>{details.title}</h1>
+      <p>{details.popularity}</p>
       <img
         src={`${url}${details.poster_path}`}
         alt="banner"
