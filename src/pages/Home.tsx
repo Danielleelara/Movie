@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { GenresProps, useGetGenres } from "../hooks/useGetGenres";
-import { MovieProps, useGetMovies } from "../hooks/useGetMovies";
+import { Genres, useGetGenres } from "../hooks/useGetGenres";
+import { useGetMovies } from "../hooks/useGetMovies";
+import { Movie } from "../services/getMovies";
+
+const url = import.meta.env.VITE_IMAGE;
 
 const Home = () => {
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_IMAGE;
-  const { moviesPopulars, loading } = useGetMovies();
+  const { popularMovies, onBack, onNext } = useGetMovies();
   const { genres } = useGetGenres();
 
   return (
@@ -13,19 +15,16 @@ const Home = () => {
       <h1 style={{ color: "blue" }}>Filmes Populares</h1>
       <div>
         <div>
-          {Array.isArray(genres) &&
-            genres?.map((genre: GenresProps, index) => {
-              return (
-                <div key={index}>
-                  <p style={{ color: "blue", fontSize: "20px" }}>
-                    {genre?.name}
-                  </p>
-                </div>
-              );
-            })}
+          {genres?.map((genre: Genres, index) => {
+            return (
+              <div key={index}>
+                <p style={{ color: "blue", fontSize: "20px" }}>{genre?.name}</p>
+              </div>
+            );
+          })}
         </div>
-        {Array.isArray(moviesPopulars) &&
-          moviesPopulars?.map((movie: MovieProps, index: any) => {
+        {popularMovies &&
+          popularMovies?.results?.map((movie: Movie, index) => {
             return (
               <div
                 key={index}
@@ -50,6 +49,8 @@ const Home = () => {
               </div>
             );
           })}
+        <button onClick={onBack}>página anterior</button>
+        <button onClick={onNext}>proxima página</button>
       </div>
     </>
   );

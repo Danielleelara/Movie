@@ -1,29 +1,11 @@
 import { useState } from "react";
 import { useEffect } from "react";
-import { getMoviesPagination } from "../services/getMovies";
-
-export interface MovieProps {
-  title?: string;
-  id?: string;
-  overview?: string;
-  popularity?: string;
-  poster_path?: string;
-  backdrop_path?: string;
-}
-
-export interface moviesPopularProps {
-  page?: number;
-  results?: MovieProps;
-  total_pages?: number;
-  total_results?: number;
-}
+import { getMoviesPagination, PopularMovies } from "../services/getMovies";
 
 export const useGetMovies = () => {
-  const [moviesPopulars, setMoviesPopulars] = useState(
-    [] as moviesPopularProps
-  );
+  const [popularMovies, setPopularMovies] = useState<PopularMovies>();
   const [loading, setLoading] = useState(true);
-  const [page, setCurrentPage] = useState(5);
+  const [page, setCurrentPage] = useState(2);
   const [next, setNext] = useState(false);
   const [back, setBack] = useState(false);
 
@@ -38,7 +20,7 @@ export const useGetMovies = () => {
   };
 
   const onNext = () => {
-    if (moviesPopulars?.total_pages && moviesPopulars?.total_pages <= page) {
+    if (popularMovies?.total_pages && popularMovies?.total_pages <= page) {
       setBack(true);
       setNext(false);
       return page;
@@ -49,11 +31,11 @@ export const useGetMovies = () => {
 
   useEffect(() => {
     setLoading(true);
-    getMoviesPagination().then((response) => {
-      setMoviesPopulars(response);
+    getMoviesPagination(page as PopularMovies).then((response) => {
+      setPopularMovies(response);
       setLoading(false);
     });
-  }, []);
+  }, [page]);
 
-  return { moviesPopulars, loading };
+  return { popularMovies, loading, page, onBack, onNext };
 };
